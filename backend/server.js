@@ -10,7 +10,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors({
-    origin: 'https://simonmacek2004.github.io/google-search-test/' // Replace with your frontend URL
+    origin: 'https://simonmacek2004.github.io' // Replace with your frontend URL
 }));
 app.use(express.json());
 

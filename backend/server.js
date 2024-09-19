@@ -9,7 +9,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+app.use(cors({
+    origin: 'https://simonmacek2004.github.io/google-search-test/' // Replace with your frontend URL
+}));
 app.use(express.json());
 
 app.post('/search', async (req, res) => {

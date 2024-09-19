@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="sk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Google Search with API</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: #f4f4f9;
+        color: #333;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      h1 {
+        color: #4caf50;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-size: 24px;
+      }
+
+      form {
+        width: 100%;
+        max-width: 600px;
+        display: flex;
+        margin-bottom: 30px;
+      }
+
+      input[type="text"] {
+        flex-grow: 1;
+        padding: 10px;
+        font-size: 16px;
+        border: 2px solid #ccc;
+        border-radius: 5px 0 0 5px;
+        outline: none;
+        transition: border 0.3s;
+      }
+
+      input[type="text"]:focus {
+        border-color: #4caf50;
+      }
+
+      button {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 0 5px 5px 0;
+        transition: background-color 0.3s;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+
+      #results {
+        width: 100%;
+        max-width: 800px;
+        margin-top: 20px;
+      }
+
+      #results div {
+        background-color: white;
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: box-shadow 0.3s;
+      }
+
+      #results div:hover {
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      a {
+        color: #4caf50;
+        font-size: 18px;
+        text-decoration: none;
+        transition: color 0.3s;
+      }
+
+      a:hover {
+        color: #388e3c;
+      }
+
+      p {
+        font-size: 14px;
+        margin-top: 5px;
+      }
+
+      footer {
+        margin-top: 40px;
+        font-size: 12px;
+        color: #777;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Google Search</h1>
+
+    <form id="searchForm">
+      <input
+        type="text"
+        name="query"
+        id="searchInput"
+        placeholder="Čo chcete vyhladať"
+        required
+      />
+      <button type="submit">Vyhladať</button>
+    </form>
+
+    <button id="downloadResults" style="display: none">
+      Stiahnúť výsledky
+    </button>
+    <div id="results"></div>
+
+    <footer>
+      <p>&copy; 2024 Google Search API Demo</p>
+    </footer>
+
+    <script>
+      document
+        .getElementById("searchForm")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault();
+
+          const query = document.getElementById("searchInput").value;
+          const resultsDiv = document.getElementById("results");
+          resultsDiv.innerHTML = "";
+
+          const language = "lang_sk";
+
+          try {
+            const response = await fetch("https://google-search-test.herokuapp.com/search", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ query, language }),
+            });
+
+            const data = await response.json();
+
+            const searchResults = [];
+
+            if (data.items) {
+              data.items.forEach((result) => {
+                const item = {
+                  title: result.title,
+                  url: result.link,
+                  snippet: result.snippet,
+                };
+                searchResults.push(item);
+
+                const resultItem = document.createElement("div");
+                resultItem.innerHTML = `<a href="${result.link}" target="_blank">${result.title}</a><p>${result.snippet}</p>`;
+                resultsDiv.appendChild(resultItem);
+              });
+
+              document.getElementById("downloadResults").style.display =
+                "block";
+              document.getElementById("downloadResults").onclick = () => {
+                const blob = new Blob(
+                  [JSON.stringify(searchResults, null, 2)],
+                  {
+                    type: "application/json",
+                  }
+                );
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "search_results.json";
+                a.click();
+                URL.revokeObjectURL(url);
+              };
+            } else {
+              resultsDiv.innerHTML = "<p>No results found.</p>";
+            }
+          } catch (error) {
+            console.error("Error fetching search results:", error);
+            resultsDiv.innerHTML =
+              "<p>Error fetching search results. Please try again.</p>";
+          }
+        });
+    </script>
+  </body>
+</html>

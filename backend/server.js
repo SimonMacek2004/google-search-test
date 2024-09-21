@@ -10,8 +10,9 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors({
-    origin: 'https://simonmacek2004.github.io' // Replace with your frontend URL
+    origin: 'https://simonmacek2004.github.io'
 }));
+
 app.use(express.json());
 
 app.post('/search', async (req, res) => {

@@ -167,6 +167,8 @@
 
               document.getElementById("downloadResults").style.display = "block";
               document.getElementById("downloadResults").onclick = () => {
+                console.log(searchResults);
+                
                 const blob = new Blob(
                   [JSON.stringify(searchResults, null, 2)],
                   {

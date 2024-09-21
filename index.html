@@ -169,8 +169,7 @@
                 resultsDiv.appendChild(resultItem);
               });
 
-              document.getElementById("downloadResults").style.display =
-                "block";
+              document.getElementById("downloadResults").style.display = "block";
               document.getElementById("downloadResults").onclick = () => {
                 const blob = new Blob(
                   [JSON.stringify(searchResults, null, 2)],
@@ -182,7 +181,6 @@
                 const a = document.createElement("a");
                 a.href = url;
                 a.download = "search_results.json";
-                a.click();
                 URL.revokeObjectURL(url);
               };
             } else {

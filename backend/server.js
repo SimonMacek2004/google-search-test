@@ -17,7 +17,7 @@ app.use(express.json());
 
 app.post('/search', async (req, res) => {
     const { query } = req.body;
-    const { language } = req.body
+    const language = "lang_sk";
 
     try {
         const response = await axios.get('https://www.googleapis.com/customsearch/v1', {

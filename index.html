@@ -140,8 +140,7 @@
           const query = document.getElementById("searchInput").value;
           const resultsDiv = document.getElementById("results");
           resultsDiv.innerHTML = "";
-
-          const language = "lang_sk";
+          
 
           try {
             const response = await fetch("https://google-search-test-d7273f1895ba.herokuapp.com/search", {
@@ -149,7 +148,7 @@
               headers: {
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify({ query, language }),
+              body: JSON.stringify({ query }),
             });
 
             const data = await response.json();
